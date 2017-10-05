@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+import subprocess
+import sys
+import os
+
+process = subprocess.Popen(['free','-m'],stdout=subprocess.PIPE)
+out, err = process.communicate()
+out = out.decode("utf-8")
+freeRAM = int(out.splitlines()[1].split()[6])
+usedSwap = int(out.splitlines()[2].split()[2])
+freeRAM = freeRAM - 100 # Keep atleast 100 MB free RAM
+
+if freeRAM < usedSwap:
+    print("Not enough memory.")
+    sys.exit(0)
+else:
+    os.system('sudo swapoff -a')
+    os.system('sudo swapon -a')
+    print("Swap is empty.")
